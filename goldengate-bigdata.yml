@@ -3,44 +3,44 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: ogg19
-  name: ogg19
+    app: oggbd19
+  name: oggbd19
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ogg19
+      app: oggbd19
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: ogg19
+        app: oggbd19
     spec:
       volumes:
-        - name: goldengate-dirprm
+        - name: goldengate-bigdata-dirprm
           hostPath:
-            path: /Users/markmixson/k8s-data/goldengate/dirprm
-        - name: goldengate-dirdat
+            path: /Users/markmixson/k8s-data/goldengate-bigdata/dirprm
+        - name: goldengate-bigdata-dirdat
           hostPath:
-            path: /Users/markmixson/k8s-data/goldengate/dirdat
-        - name: goldengate-tns
+            path: /Users/markmixson/k8s-data/goldengate-bigdata/dirdat
+        - name: goldengate-bigdata-tns
           hostPath:
-            path: /Users/markmixson/k8s-data/goldengate/network
+            path: /Users/markmixson/k8s-data/goldengate-bigdata/network
       containers:
-      - image: oracle/goldengate-standard:19.1.0.0.2
+      - image: oracle/goldengate-big-data:19.1.0.0.2
         imagePullPolicy: Never
-        name: ogg19
+        name: oggbd19
         resources: {}
         ports:
         - containerPort: 7809
           hostPort: 7809
         volumeMounts:
-          - name: goldengate-dirprm
+          - name: goldengate-bigdata-dirprm
             mountPath: /u01/app/ogg/dirprm
-          - name: goldengate-dirdat
+          - name: goldengate-bigdata-dirdat
             mountPath: /u01/app/ogg/dirdat
-          - name: goldengate-tns
+          - name: goldengate-bigdata-tns
             mountPath: /network
         env:
           - name: OGG_ADMIN_PWD 
