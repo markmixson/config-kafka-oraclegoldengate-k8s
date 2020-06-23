@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ogg19
+  name: ogg19
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ogg19
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ogg19
+    spec:
+      volumes:
+        - name: goldengate-dirprm
+          hostPath:
+            path: /Users/markmixson/k8s-data/goldengate/dirprm
+        - name: goldengate-dirdat
+          hostPath:
+            path: /Users/markmixson/k8s-data/goldengate/dirdat
+        - name: goldengate-tns
+          hostPath:
+            path: /Users/markmixson/k8s-data/goldengate/network
+      containers:
+      - image: oracle/goldengate-standard:19.1.0.0.2
+        imagePullPolicy: Never
+        name: ogg19
+        resources: {}
+        ports:
+        - containerPort: 7809
+          hostPort: 7809
+        volumeMounts:
+          - name: goldengate-dirprm
+            mountPath: /u01/app/ogg/dirprm
+          - name: goldengate-dirdat
+            mountPath: /u01/app/ogg/dirdat
+          - name: goldengate-tns
+            mountPath: /network
+        env:
+          - name: OGG_ADMIN_PWD 
+            value: Welcome1
+          - name: TNS_ADMIN
+            value: /network
+status: {}

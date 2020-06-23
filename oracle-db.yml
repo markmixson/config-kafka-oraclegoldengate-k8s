@@ -1,0 +1,68 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: database
+  namespace: oracle-db
+  labels:
+    app: database
+    version: 19.3.0.0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+      version: 19.3.0.0
+  template:
+    metadata:
+      name: database
+      labels:
+        app: database
+        version: 19.3.0.0
+    spec:
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      # add your volume mount for your persistent storage here
+      - name: oracle-persistent-storage
+        hostPath:
+          path: /Users/markmixson/k8s-data/oracle-db
+      containers:
+      - name: database
+        image: oracle/database:19.3.0-ee
+        imagePullPolicy: Never 
+        resources:
+          requests:
+            memory: 2Gi
+        ports:
+        - containerPort: 1521
+          hostPort: 1521
+        volumeMounts:
+          - name: dshm
+            mountPath: /dev/shm
+          # add your persistent storage for DB files here
+          - name: oracle-persistent-storage
+            mountPath: /opt/oracle/oradata
+        env:
+          - name: ORACLE_SID
+            value: KAFKATEST
+          - name: ORACLE_PDB
+            value: KAFKATESTPDB
+          - name: ORACLE_PWD
+            value: Welcome1
+      imagePullSecrets:
+      - name: regsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  namespace: oracle-db
+spec:
+  selector:
+    app: database
+    version: 19.3.0.0
+  ports:
+  - protocol: TCP
+    port: 1521
+    targetPort: 1521
