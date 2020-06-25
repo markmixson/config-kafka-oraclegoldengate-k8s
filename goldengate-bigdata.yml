@@ -27,8 +27,12 @@ spec:
         - name: goldengate-bigdata-tns
           hostPath:
             path: /Users/markmixson/k8s-data/goldengate-bigdata/network
+        - name: goldengate-bigdata-kafka
+          hostPath:
+            path: /Users/markmixson/k8s-data/goldengate-bigdata/kafka-libs
       containers:
-      - image: oracle/goldengate-big-data:19.1.0.0.2
+      - image: oracle/goldengate-bigdata:19.1.0.0.2
+        command: ['chown 54321:54321 /u01/app/ogg/dirdat']
         imagePullPolicy: Never
         name: oggbd19
         resources: {}
@@ -42,9 +46,13 @@ spec:
             mountPath: /u01/app/ogg/dirdat
           - name: goldengate-bigdata-tns
             mountPath: /network
+          - name: goldengate-bigdata-kafka
+            mountPath: /opt/kafka/libs
         env:
           - name: OGG_ADMIN_PWD 
             value: Welcome1
           - name: TNS_ADMIN
             value: /network
+          - name: KAFKA_HOME
+            value: /opt/kafka
 status: {}

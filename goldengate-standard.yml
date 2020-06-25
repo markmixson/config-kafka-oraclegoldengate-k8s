@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: oggstd19
+  name: oggstd19
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oggstd19
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: oggstd19
+    spec:
+      volumes:
+        - name: goldengate-standard-dirprm
+          hostPath:
+            path: /Users/markmixson/k8s-data/goldengate-standard/dirprm
+        - name: goldengate-standard-dirdat
+          hostPath:
+            path: /Users/markmixson/k8s-data/goldengate-standard/dirdat
+        - name: goldengate-standard-tns
+          hostPath:
+            path: /Users/markmixson/k8s-data/goldengate-standard/network
+      containers:
+      - image: oracle/goldengate-standard:19.1.0.0.4
+        imagePullPolicy: Never
+        name: oggstd19
+        resources: {}
+        ports:
+        - containerPort: 7810
+          hostPort: 7810
+        volumeMounts:
+          - name: goldengate-standard-dirprm
+            mountPath: /u01/app/ogg/dirprm
+          - name: goldengate-standard-dirdat
+            mountPath: /u01/app/ogg/dirdat
+          - name: goldengate-standard-tns
+            mountPath: /network
+        env:
+          - name: OGG_ADMIN_PWD 
+            value: Welcome1
+          - name: TNS_ADMIN
+            value: /network
+          - name: PORT_BASE
+            value: "7810"
+          - name: LD_LIBRARY_PATH
+            value: $ORACLE_HOME/lib:$OGG_HOME
+status: {}
