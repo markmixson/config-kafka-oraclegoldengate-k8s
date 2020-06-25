@@ -32,7 +32,8 @@ spec:
             path: /Users/markmixson/k8s-data/goldengate-bigdata/kafka-libs
       containers:
       - image: oracle/goldengate-bigdata:19.1.0.0.2
-        command: ['chown 54321:54321 /u01/app/ogg/dirdat']
+        command: ["/bin/bash"]
+        args: ["-c", "chown -R 54321:54321 /u01/app/ogg/dirdat && bash /runOracleGoldenGate.sh"]
         imagePullPolicy: Never
         name: oggbd19
         resources: {}
