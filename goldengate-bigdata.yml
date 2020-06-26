@@ -1,10 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: oggbd19
+  namespace: goldengate-bigdata
   creationTimestamp: null
   labels:
     app: oggbd19
-  name: oggbd19
 spec:
   replicas: 1
   selector:
@@ -13,6 +14,7 @@ spec:
   strategy: {}
   template:
     metadata:
+      name: oggbd19
       creationTimestamp: null
       labels:
         app: oggbd19
@@ -56,4 +58,24 @@ spec:
             value: /network
           - name: KAFKA_HOME
             value: /opt/kafka
+          - name: PORT_BASE
+            value: "7809"
 status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oggbd19 
+  namespace: goldengate-bigdata
+spec:
+  selector:
+    app: oggbd19
+  ports:
+  - name: manager
+    protocol: TCP
+    port: 7809
+    targetPort: 7809
+  - name: control
+    protocol: TCP
+    port: 7819
+    targetPort: 7819

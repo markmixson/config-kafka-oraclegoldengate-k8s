@@ -1,10 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: oggstd19
+  namespace: goldengate-standard
   creationTimestamp: null
   labels:
     app: oggstd19
-  name: oggstd19
 spec:
   replicas: 1
   selector:
@@ -13,6 +14,7 @@ spec:
   strategy: {}
   template:
     metadata:
+      name: oggstd19
       creationTimestamp: null
       labels:
         app: oggstd19
@@ -29,6 +31,8 @@ spec:
             path: /Users/markmixson/k8s-data/goldengate-standard/network
       containers:
       - image: oracle/goldengate-standard:19.1.0.0.4
+        command: ["/bin/bash"]
+        args: ["-c", "chown -R 54321:54321 /u01/app/ogg/dirdat && bash /runOracleGoldenGate.sh"]
         imagePullPolicy: Never
         name: oggstd19
         resources: {}
@@ -52,3 +56,16 @@ spec:
           - name: LD_LIBRARY_PATH
             value: $ORACLE_HOME/lib:$OGG_HOME
 status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oggstd19
+  namespace: goldengate-standard
+spec:
+  selector:
+    app: oggstd19
+  ports:
+  - protocol: TCP
+    port: 7810
+    targetPort: 7810
