@@ -1,6 +1,6 @@
 # Oracle GoldenGate for Big Data Example Using Kafka
 
-## Prerequesites
+## Prerequisites
 This example assumes running in the docker-desktop exposed Kubernetes (single node cluster) using host path mounted values.  The paths are currently hard-coded and need to be adjusted by hand.
 
 ### Oracle Images
